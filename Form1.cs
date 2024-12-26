@@ -14,6 +14,7 @@ namespace WinFormsApp1
 {
     public partial class Form1 : Form
     {
+        bool m_isClose = false;
         string remark;
         static ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         List<MessageObject> MessageObjects = new List<MessageObject>();
@@ -95,12 +96,11 @@ namespace WinFormsApp1
 
         private async void DoWork()
         {
-            // 配置代理服务器，监听 localhost 的 8080 端口
+            // 配置代理服务器
             var fluxzySetting = FluxzySetting.CreateDefault(IPAddress.Loopback, 18000);
             // 配置规则，捕获并记录所有请求和响应
             fluxzySetting.ConfigureRule().WhenAny().Do(new RequestAction(MessageObjects, remark, envs, this)); // 记录所有请求和响应
-
-            fluxzySetting.SetArchivingPolicy(ArchivingPolicy.CreateFromDirectory(@"D:\\fluxzy\\"));
+            // fluxzySetting.SetArchivingPolicy(ArchivingPolicy.CreateFromDirectory(@"D:\\fluxzy\\"));
             fluxzySetting.UseBouncyCastleSslEngine();
             fluxzySetting.SetAutoInstallCertificate(true);
 
@@ -115,6 +115,8 @@ namespace WinFormsApp1
                     Thread.Sleep(1000);
                 }
             }
+            Program.DisableSystemProxy();
+            addLog("代理服务已关闭");
         }
         private void button2_Click(object sender, EventArgs e)
         {
@@ -156,6 +158,21 @@ namespace WinFormsApp1
                 comboBox1.SelectedIndex = 0;
                 ReloadFiddler();
             }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!m_isClose) {
+                new Thread(() =>
+                {
+                    bStart = false;
+                    Thread.Sleep(2 * 1000);
+                    m_isClose = true;
+                    this.Close();
+                }).Start();
+                e.Cancel = true;
+            }
+            
         }
     }
 }

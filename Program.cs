@@ -61,7 +61,7 @@ namespace WinFormsApp1
                 Visible = true,
             };
             Application.Run(new Form1());
-
+            FreeConsole();
             DisableSystemProxy();
         }
 
