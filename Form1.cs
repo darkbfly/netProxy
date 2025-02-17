@@ -122,7 +122,7 @@ namespace WinFormsApp1
         {
             bStart = false;
             Thread.Sleep(1000);
-            ReloadFiddler();
+            init();
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -144,6 +144,11 @@ namespace WinFormsApp1
         }
 
         private async void Form1_Load(object sender, EventArgs e)
+        {
+            init();
+        }
+
+        private async void init()
         {
             if (!await qinglong.GetInstance().Init(this))
             {
@@ -172,7 +177,6 @@ namespace WinFormsApp1
                 }).Start();
                 e.Cancel = true;
             }
-            
         }
     }
 }

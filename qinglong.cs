@@ -23,7 +23,7 @@ namespace WinFormsApp1
         // 静态变量用于存储唯一的实例
         private Dictionary<string, string> qinglongDic = new Dictionary<string, string>();
         private static qinglong instance;
-
+        private bool bStatus;
         private static readonly object _lock = new object();
         private qinglong() { ip = ""; port = -1; client_id = ""; client_secret = ""; token = ""; iniPath = ""; }
 
@@ -45,7 +45,7 @@ namespace WinFormsApp1
         public async Task<bool> Init(Form1 form)
         {
             this.form = form;
-            bool bRet = false;
+            bool bRet = bStatus = false;
             iniPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "qinglong.ini");
             ip = IniFunc.getString("ql", "ip", "", iniPath);
             port = IniFunc.GetInt("ql", "port", -1, iniPath);
@@ -78,6 +78,7 @@ namespace WinFormsApp1
                 goto cleanUP;
             }
             bRet = await Login();
+            bStatus = bRet;
         cleanUP:
             return bRet;
         }
@@ -357,6 +358,7 @@ namespace WinFormsApp1
                 keysToRemove.Clear();
                 if (qinglong.GetInstance().qinglongDic.Count() > 0)
                 {
+                    if (!qinglong.GetInstance().bStatus) { continue; }
                     foreach (string jsonMsg in qinglong.GetInstance().qinglongDic.Values)
                     {
                         JObject obj = JObject.Parse(jsonMsg);

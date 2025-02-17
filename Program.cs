@@ -60,6 +60,7 @@ namespace WinFormsApp1
                 Text = "MyFiddler",
                 Visible = true,
             };
+            DisableSystemProxy();
             Application.Run(new Form1());
             FreeConsole();
             DisableSystemProxy();
