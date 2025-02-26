@@ -29,15 +29,16 @@ namespace WinFormsApp1
             m_remark = remark;
             m_form1 = form;
         }
-        public override FilterScope ActionScope => FilterScope.RequestHeaderReceivedFromClient;
+        public override FilterScope ActionScope => FilterScope.OutOfScope;
 
         public override string DefaultDescription => nameof(RequestAction);
 
         public override ValueTask InternalAlter(ExchangeContext context, Exchange? exchange, Connection? connection, FilterScope scope, BreakPointManager breakPointManager)
         {
+            if (exchange == null) { return default; }
             foreach (MessageObject obj in m_MessageObjects)
             {
-                if (obj.host == exchange.Authority.HostName)
+                if (obj.host == exchange!.Authority.HostName)
                 {
                     context.RegisterRequestBodySubstitution(new RequestBodySubstitution(exchange!, obj, m_remark, m_envs, m_form1));
                 }

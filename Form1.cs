@@ -100,6 +100,7 @@ namespace WinFormsApp1
             var fluxzySetting = FluxzySetting.CreateDefault(IPAddress.Loopback, 18000);
             // 配置规则，捕获并记录所有请求和响应
             fluxzySetting.ConfigureRule().WhenAny().Do(new RequestAction(MessageObjects, remark, envs, this)); // 记录所有请求和响应
+            fluxzySetting.ConfigureRule().WhenAny().Do(new StdOutAction("123")); // 记录所有请求和响应
             // fluxzySetting.SetArchivingPolicy(ArchivingPolicy.CreateFromDirectory(@"D:\\fluxzy\\"));
             fluxzySetting.UseBouncyCastleSslEngine();
             fluxzySetting.SetAutoInstallCertificate(true);

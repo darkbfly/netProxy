@@ -260,7 +260,7 @@ namespace WinFormsApp1
                 }
             }
 
-            
+           
             if (this.body != null && this.body.Length > 0)
             {
                 try
@@ -408,6 +408,10 @@ namespace WinFormsApp1
                                 data = (cookieMap.ContainsKey(innerContent)) ? cookieMap[innerContent] : null;
                                 break;
                             case "parsebody":
+                                foreach (string x in parseBodyMap.Keys)
+                                {
+                                    log.Info($"parseBodyMap {x}={parseBodyMap[x]}");
+                                }
                                 data = (parseBodyMap.ContainsKey(innerContent)) ? parseBodyMap[innerContent] : null;
                                 break;
                             case "jsonbody":
